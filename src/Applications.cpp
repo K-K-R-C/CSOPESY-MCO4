@@ -16,7 +16,7 @@ AppSettings& GetAppSettings() {
 namespace {
 
 // =====================================================================
-//  FILE EXPLORER data (fake in-memory file system)
+//  FILE EXPLORER data (fake in-memory file system, with placeholders only, no real data pa)
 // =====================================================================
 struct Node {
     std::string name, type, modified;
