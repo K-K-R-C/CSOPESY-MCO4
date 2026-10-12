@@ -6,8 +6,8 @@
 // HOW OTHER MEMBERS PLUG IN
 //   * Any window (Task Manager, app screens) derives from IWindow and is added
 //     with desktop.registerWindow(...). Open/close it with desktop.toggle("id").
-//   * The taskbar buttons are drawn by Taskbar::draw() (Member 2), which the
-//     Desktop calls inside the taskbar panel via setTaskbarContent().
+//   * The taskbar is drawn by DrawTaskbar(Desktop&) (Member 2), called every frame
+//     through setTaskbarDrawer(). The Desktop adds the VOL/NET/PWR tray on top of it.
 // ---------------------------------------------------------------------------
 #include <functional>
 #include <memory>
@@ -26,7 +26,7 @@ struct IWindow {
 
 class Desktop {
 public:
-    static constexpr float kTaskbarHeight = 56.0f;
+    static constexpr float kTaskbarHeight = 48.0f;
     using TaskbarFn = std::function<void(Desktop&)>;
 
     void registerWindow(std::shared_ptr<IWindow> w);
@@ -35,7 +35,8 @@ public:
     void close(const std::string& id);
     void toggle(const std::string& id);
     bool isOpen(const std::string& id) const;
-    void setTaskbarContent(TaskbarFn fn) { taskbarFn_ = std::move(fn); }
+    // The taskbar (Member 2) draws its OWN full-width panel from this callback.
+    void setTaskbarDrawer(TaskbarFn fn) { taskbarFn_ = std::move(fn); }
 
     void requestShutdown() { shutdownRequested_ = true; }  // called by PWR
     bool shutdownRequested() const { return shutdownRequested_; }
@@ -44,7 +45,6 @@ public:
 
 private:
     void drawWallpaper(float t) const;
-    void drawTaskbar();
     void drawTray();
     void drawClock();
 

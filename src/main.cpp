@@ -20,6 +20,12 @@
 namespace {
 bool g_allowClose = false;  // flipped to true only by the PWR shutdown sequence
 enum class Stage { Bios, Splash, Desktop, ShuttingDown };
+
+// Member 3's Task Manager is a free function DrawTaskManager(bool*), so wrap it as an IWindow.
+struct TaskManagerWindow : IWindow {
+    TaskManagerWindow() : IWindow("taskmgr", "Task Manager") {}
+    void draw() override { DrawTaskManager(&isOpen); }
+};
 }
 
 int main() {
@@ -49,11 +55,10 @@ int main() {
     // ---- compose the OS ----
     Desktop desktop;
     BootSequence boot;
-    Taskbar taskbar;
     desktop.registerWindow(std::make_shared<FileExplorerWindow>());
     desktop.registerWindow(std::make_shared<SystemInfoWindow>());
-    desktop.registerWindow(std::make_shared<TaskManager>());
-    desktop.setTaskbarContent([&taskbar](Desktop& d) { taskbar.draw(d); });
+    desktop.registerWindow(std::make_shared<TaskManagerWindow>());
+    desktop.setTaskbarDrawer([](Desktop& d) { DrawTaskbar(d); });
 
     Stage stage = Stage::Bios;
     double last = glfwGetTime(), shutdownStart = 0.0;

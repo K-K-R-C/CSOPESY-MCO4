@@ -52,7 +52,11 @@ BootSequence::BootSequence() {
         {"Secondary Master:   CD-ROM LTN-305A", false},
         {"Secondary Slave:    None", false},
         {"", false},
-        {"Group <NN>: <member names here>", false},
+        {"Group Members:", false},
+        {"  Alain Zuriel Marcos", false},
+        {"  Karl Kristoffer Camato", false},
+        {"  Ryan James Malapitan", false},
+        {"  Trisha Bendol", false},
     };
     float at = 0.4f;
     for (const Src& s : src) {
