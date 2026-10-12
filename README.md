@@ -31,7 +31,7 @@ GLFW (3.4) and Dear ImGui (v1.91.9) do not need to be installed manually. CMake 
  
  
 ## Building & Running
-**Windows / macOS / Linux (CMake)**
+**Windows / macOS (CMake)**
 ```
 cmake -S . -B build
 cmake --build build
