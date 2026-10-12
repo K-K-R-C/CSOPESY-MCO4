@@ -31,6 +31,13 @@ struct TaskManagerWindow : IWindow {
 int main() {
     if (!glfwInit()) { std::fprintf(stderr, "Failed to init GLFW\n"); return 1; }
 
+    #ifdef __APPLE__
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
+
     glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "CSOPESY Desktop OS Emulator", nullptr, nullptr);
     if (!window) { glfwTerminate(); return 1; }
@@ -50,7 +57,12 @@ int main() {
     io.Fonts->AddFontDefault(&fontCfg);
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+
+    #ifdef __APPLE__
+        ImGui_ImplOpenGL3_Init("#version 150");
+    #else
+        ImGui_ImplOpenGL3_Init("#version 130");
+    #endif
 
     // ---- compose the OS ----
     Desktop desktop;
